@@ -5,8 +5,6 @@ import com.tanmay.Thought_App.service.JournalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,22 +18,31 @@ public class JournalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JournalEntry>> getAllJournalEntries(){
-        return new ResponseEntity<>(journalService.getAllEntries(), HttpStatus.OK);
+    public ResponseEntity<List<JournalEntry>> getAllEntries(){
+        return new ResponseEntity<>(journalService.getAllEntries(), HttpStatus.FOUND);
     }
 
     @PostMapping
-    public ResponseEntity<JournalEntry> saveNewJournalEntry(@RequestBody JournalEntry entry){
-        if(entry.getDate()== null){
-            entry.setDate(LocalDate.now());
-        }
+    public ResponseEntity<JournalEntry> saveNewEntry(@RequestBody JournalEntry entry){
         return new ResponseEntity<>(journalService.saveEntry(entry), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<JournalEntry> getEntryById (@PathVariable String id){
-        return journalService.getEntryById(id)
+    @GetMapping("/{journalId}")
+    public ResponseEntity<JournalEntry> getEntry (@PathVariable String journalId){
+        return journalService.getEntryById(journalId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{journalId}")
+    public ResponseEntity<?> deleteEntry (@PathVariable String journalId){
+        journalService.deleteJournalById(journalId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{journalId}")
+    public ResponseEntity<JournalEntry> editAnEntry (@PathVariable String journalId,
+                                                     @RequestBody JournalEntry entry){
+        return new ResponseEntity<>(journalService.editEntry(journalId, entry), HttpStatus.OK);
     }
 }

@@ -11,6 +11,7 @@ public interface JournalService {
 
     public List<JournalEntry> getAllEntries();
     public JournalEntry saveEntry (JournalEntry entry);
-    public Optional<JournalEntry> getEntryById (String id);
-    public void deleteJournalById (String id);
+    public Optional<JournalEntry> getEntryById (String entryId);
+    public void deleteJournalById (String entryId);
+    public JournalEntry editEntry (String entryId, JournalEntry entry);
 }
