@@ -36,8 +36,12 @@ public class JournalController {
 
     @DeleteMapping("/{journalId}")
     public ResponseEntity<?> deleteEntry (@PathVariable String journalId){
-        journalService.deleteJournalById(journalId);
-        return ResponseEntity.ok().build();
+        if(journalService.deleteJournalById(journalId)) {
+            return ResponseEntity.ok().build();
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{journalId}")

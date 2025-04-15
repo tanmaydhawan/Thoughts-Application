@@ -36,8 +36,14 @@ public class JournalServiceImpl implements JournalService{
     }
 
     @Override
-    public void deleteJournalById(String journalId) {
-        journalRepository.deleteById(journalId);
+    public boolean deleteJournalById(String journalId) {
+        if(journalRepository.existsById(journalId)){
+            journalRepository.deleteById(journalId);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     @Override
