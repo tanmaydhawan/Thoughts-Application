@@ -1,5 +1,6 @@
 package com.tanmay.Thought_App.controller;
 
+import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
 import com.tanmay.Thought_App.entity.JournalEntry;
 import com.tanmay.Thought_App.service.JournalService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class JournalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JournalEntry>> getAllEntries(){
+    public ResponseEntity<List<JournalEntryResponseDTO>> getAllEntries(){
         return new ResponseEntity<>(journalService.getAllEntries(), HttpStatus.FOUND);
     }
 
@@ -28,10 +29,8 @@ public class JournalController {
     }
 
     @GetMapping("/{journalId}")
-    public ResponseEntity<JournalEntry> getEntry (@PathVariable String journalId){
-        return journalService.getEntryById(journalId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<JournalEntryResponseDTO> getEntry (@PathVariable String journalId){
+        return new ResponseEntity<>(journalService.getEntryById(journalId), HttpStatus.FOUND);
     }
 
     @DeleteMapping("/{journalId}")

@@ -1,5 +1,7 @@
 package com.tanmay.Thought_App.service;
 
+import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
+import com.tanmay.Thought_App.dto.JournalModelMapper;
 import com.tanmay.Thought_App.entity.JournalEntry;
 import com.tanmay.Thought_App.repo.JournalRepository;
 import org.springframework.stereotype.Service;
@@ -7,19 +9,26 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JournalServiceImpl implements JournalService{
 
     private final JournalRepository journalRepository;
+    private final JournalModelMapper journalModelMapper;
 
-    public JournalServiceImpl(JournalRepository journalRepo){
+
+    public JournalServiceImpl(JournalRepository journalRepo, JournalModelMapper journalModelMapper){
         this.journalRepository = journalRepo;
+        this.journalModelMapper = journalModelMapper;
     }
 
     @Override
-    public List<JournalEntry> getAllEntries() {
-        return journalRepository.findAll();
+    public List<JournalEntryResponseDTO> getAllEntries() {
+
+        List<JournalEntry> journalEntries = journalRepository.findAll();
+        return journalEntries.stream().map(journalModelMapper::toDto).toList();
+
     }
 
     @Override
@@ -31,8 +40,10 @@ public class JournalServiceImpl implements JournalService{
     }
 
     @Override
-    public Optional<JournalEntry> getEntryById(String journalId) {
-        return journalRepository.findById(journalId);
+    public JournalEntryResponseDTO getEntryById(String journalId) {
+
+        Optional<JournalEntry> journalEntry = journalRepository.findById(journalId);
+        return journalEntry.map(journalModelMapper::toDto).orElse(null);
     }
 
     @Override
