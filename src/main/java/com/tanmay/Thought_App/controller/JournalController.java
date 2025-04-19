@@ -1,5 +1,6 @@
 package com.tanmay.Thought_App.controller;
 
+import com.tanmay.Thought_App.dto.JournalEntryRequestDTO;
 import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
 import com.tanmay.Thought_App.entity.JournalEntry;
 import com.tanmay.Thought_App.service.JournalService;
@@ -24,8 +25,8 @@ public class JournalController {
     }
 
     @PostMapping
-    public ResponseEntity<JournalEntry> saveNewEntry(@RequestBody JournalEntry entry){
-        return new ResponseEntity<>(journalService.saveEntry(entry), HttpStatus.CREATED);
+    public ResponseEntity<JournalEntryResponseDTO> saveNewEntry(@RequestBody JournalEntryRequestDTO journalEntryRequestDTO){
+        return new ResponseEntity<>(journalService.saveEntry(journalEntryRequestDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/{journalId}")
@@ -44,8 +45,8 @@ public class JournalController {
     }
 
     @PutMapping("/{journalId}")
-    public ResponseEntity<JournalEntry> editAnEntry (@PathVariable String journalId,
-                                                     @RequestBody JournalEntry entry){
-        return new ResponseEntity<>(journalService.editEntry(journalId, entry), HttpStatus.OK);
+    public ResponseEntity<JournalEntryResponseDTO> editAnEntry (@PathVariable String journalId,
+                                                     @RequestBody JournalEntryRequestDTO journalEntryRequestDTO){
+        return new ResponseEntity<>(journalService.editEntry(journalId, journalEntryRequestDTO), HttpStatus.OK);
     }
 }

@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JournalModelMapper {
 
-    // Journal Entry to DTO
-    public JournalEntryResponseDTO toDto(JournalEntry entry){
+     public JournalEntryResponseDTO toDto(JournalEntry entry){
 
         JournalEntryResponseDTO journalEntryResponseDTO = new JournalEntryResponseDTO();
         journalEntryResponseDTO.setId(entry.getId());
@@ -18,6 +17,13 @@ public class JournalModelMapper {
         return  journalEntryResponseDTO;
     }
 
-//    private toEntity
+    public JournalEntry toEntity (JournalEntryRequestDTO journalEntryRequestDTO){
+
+        JournalEntry journalEntry = new JournalEntry();
+        journalEntry.setTitle(journalEntryRequestDTO.getTitle());
+        journalEntry.setContent(journalEntryRequestDTO.getContent());
+
+        return journalEntry;
+    }
 
 }

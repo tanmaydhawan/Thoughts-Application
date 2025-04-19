@@ -1,5 +1,6 @@
 package com.tanmay.Thought_App.service;
 
+import com.tanmay.Thought_App.dto.JournalEntryRequestDTO;
 import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
 import com.tanmay.Thought_App.dto.JournalModelMapper;
 import com.tanmay.Thought_App.entity.JournalEntry;
@@ -32,11 +33,15 @@ public class JournalServiceImpl implements JournalService{
     }
 
     @Override
-    public JournalEntry saveEntry(JournalEntry entry) {
-        if(entry.getDate()== null){
-            entry.setDate(LocalDate.now());
+    public JournalEntryResponseDTO saveEntry(JournalEntryRequestDTO journalEntryRequestDTO) {
+
+        JournalEntry journalEntry = journalModelMapper.toEntity(journalEntryRequestDTO);
+
+        if(journalEntry.getDate()== null){
+            journalEntry.setDate(LocalDate.now());
         }
-        return journalRepository.save(entry);
+        JournalEntry savedJournalEntry = journalRepository.save(journalEntry);
+        return journalModelMapper.toDto(savedJournalEntry);
     }
 
     @Override
@@ -58,17 +63,16 @@ public class JournalServiceImpl implements JournalService{
     }
 
     @Override
-    public JournalEntry editEntry(String journalId, JournalEntry entry) {
+    public JournalEntryResponseDTO editEntry(String journalId, JournalEntryRequestDTO journalEntryRequestDTO) {
 
-        Optional<JournalEntry> existingEntry = journalRepository.findById(journalId);
+        JournalEntry existingEntry = journalRepository.findById(journalId)
+                .orElse(null);
 
-        JournalEntry updatedJournal = new JournalEntry();
+        existingEntry.setTitle(journalEntryRequestDTO.getTitle());
+        existingEntry.setContent(journalEntryRequestDTO.getContent());
+        existingEntry.setDate(LocalDate.now());
 
-        if(existingEntry.isPresent()){
-            updatedJournal.setTitle(entry.getTitle());
-            updatedJournal.setContent(entry.getContent());
-            updatedJournal.setDate(LocalDate.now());
-        }
-        return journalRepository.save(updatedJournal);
+        JournalEntry editedEntry = journalRepository.save(existingEntry);
+        return journalModelMapper.toDto(editedEntry);
     }
 }
