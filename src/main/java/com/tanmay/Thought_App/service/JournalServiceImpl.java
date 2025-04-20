@@ -4,13 +4,13 @@ import com.tanmay.Thought_App.dto.JournalEntryRequestDTO;
 import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
 import com.tanmay.Thought_App.dto.JournalModelMapper;
 import com.tanmay.Thought_App.entity.JournalEntry;
+import com.tanmay.Thought_App.exception.ResourceNotFoundException;
 import com.tanmay.Thought_App.repo.JournalRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class JournalServiceImpl implements JournalService{
@@ -48,7 +48,8 @@ public class JournalServiceImpl implements JournalService{
     public JournalEntryResponseDTO getEntryById(String journalId) {
 
         Optional<JournalEntry> journalEntry = journalRepository.findById(journalId);
-        return journalEntry.map(journalModelMapper::toDto).orElse(null);
+        return journalEntry.map(journalModelMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Couldn't find the Thought you are looking for!"));
     }
 
     @Override
@@ -66,7 +67,7 @@ public class JournalServiceImpl implements JournalService{
     public JournalEntryResponseDTO editEntry(String journalId, JournalEntryRequestDTO journalEntryRequestDTO) {
 
         JournalEntry existingEntry = journalRepository.findById(journalId)
-                .orElse(null);
+                .orElseThrow(()-> new ResourceNotFoundException("Couldn't find the Thought you wanted to Modify!"));
 
         existingEntry.setTitle(journalEntryRequestDTO.getTitle());
         existingEntry.setContent(journalEntryRequestDTO.getContent());
