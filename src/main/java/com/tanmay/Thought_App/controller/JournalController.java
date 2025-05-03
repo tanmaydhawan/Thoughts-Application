@@ -49,4 +49,11 @@ public class JournalController {
                                                      @RequestBody JournalEntryRequestDTO journalEntryRequestDTO){
         return new ResponseEntity<>(journalService.editEntry(journalId, journalEntryRequestDTO), HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<JournalEntryResponseDTO>> searchEntries
+            (@RequestParam(required = false) String keyword){
+        return new ResponseEntity<>(journalService.searchEntriesByFilters(keyword), HttpStatus.FOUND);
+    }
+
 }

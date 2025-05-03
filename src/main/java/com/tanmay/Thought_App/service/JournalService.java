@@ -16,4 +16,5 @@ public interface JournalService {
     public JournalEntryResponseDTO getEntryById (String entryId);
     public boolean deleteJournalById (String entryId);
     public JournalEntryResponseDTO editEntry (String entryId, JournalEntryRequestDTO journalEntryRequestDTO);
+    public List<JournalEntryResponseDTO> searchEntriesByFilters(String keyword);
 }

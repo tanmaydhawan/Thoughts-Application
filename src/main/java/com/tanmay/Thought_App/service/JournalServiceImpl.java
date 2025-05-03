@@ -67,7 +67,7 @@ public class JournalServiceImpl implements JournalService{
     public JournalEntryResponseDTO editEntry(String journalId, JournalEntryRequestDTO journalEntryRequestDTO) {
 
         JournalEntry existingEntry = journalRepository.findById(journalId)
-                .orElseThrow(()-> new ResourceNotFoundException("Couldn't find the Thought you wanted to Modify!"));
+                .orElse(null);
 
         existingEntry.setTitle(journalEntryRequestDTO.getTitle());
         existingEntry.setContent(journalEntryRequestDTO.getContent());
@@ -75,5 +75,19 @@ public class JournalServiceImpl implements JournalService{
 
         JournalEntry editedEntry = journalRepository.save(existingEntry);
         return journalModelMapper.toDto(editedEntry);
+    }
+
+    @Override
+    public List<JournalEntryResponseDTO> searchEntriesByFilters(String keyword) {
+
+        List<JournalEntry> results;
+
+        if (keyword != null){
+            results = journalRepository.searchByKeyword(keyword);
+        }
+        else {
+            results = journalRepository.findAll();
+        }
+        return results.stream().map(journalModelMapper::toDto).toList();
     }
 }
