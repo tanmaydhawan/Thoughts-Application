@@ -5,6 +5,7 @@ import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
 import com.tanmay.Thought_App.entity.JournalEntry;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +18,5 @@ public interface JournalService {
     public boolean deleteJournalById (String entryId);
     public JournalEntryResponseDTO editEntry (String entryId, JournalEntryRequestDTO journalEntryRequestDTO);
     public List<JournalEntryResponseDTO> searchEntriesByFilters(String keyword);
+    public List<JournalEntryResponseDTO> searchEntriesDynamic (String title, String content, LocalDate date);
 }

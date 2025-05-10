@@ -67,7 +67,7 @@ public class JournalServiceImpl implements JournalService{
     public JournalEntryResponseDTO editEntry(String journalId, JournalEntryRequestDTO journalEntryRequestDTO) {
 
         JournalEntry existingEntry = journalRepository.findById(journalId)
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Couldn't find the Thought you are looking for!"));
 
         existingEntry.setTitle(journalEntryRequestDTO.getTitle());
         existingEntry.setContent(journalEntryRequestDTO.getContent());
@@ -89,5 +89,14 @@ public class JournalServiceImpl implements JournalService{
             results = journalRepository.findAll();
         }
         return results.stream().map(journalModelMapper::toDto).toList();
+    }
+
+    @Override
+    public List<JournalEntryResponseDTO> searchEntriesDynamic(String title, String content, LocalDate date) {
+
+        List<JournalEntry> entriesByCriteria = journalRepository.getEntriesByCriteria(title, content, date);
+        return entriesByCriteria.stream()
+                .map(journalModelMapper::toDto)
+                .toList();
     }
 }

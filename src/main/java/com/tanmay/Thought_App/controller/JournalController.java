@@ -4,9 +4,12 @@ import com.tanmay.Thought_App.dto.JournalEntryRequestDTO;
 import com.tanmay.Thought_App.dto.JournalEntryResponseDTO;
 import com.tanmay.Thought_App.entity.JournalEntry;
 import com.tanmay.Thought_App.service.JournalService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -54,6 +57,16 @@ public class JournalController {
     public ResponseEntity<List<JournalEntryResponseDTO>> searchEntries
             (@RequestParam(required = false) String keyword){
         return new ResponseEntity<>(journalService.searchEntriesByFilters(keyword), HttpStatus.FOUND);
+    }
+
+    @GetMapping("/search-d")
+    public ResponseEntity<List<JournalEntryResponseDTO>> searchEntriesDynamic(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        List<JournalEntryResponseDTO> results = journalService.searchEntriesDynamic(title, content, date);
+        return ResponseEntity.ok(results);
     }
 
 }
